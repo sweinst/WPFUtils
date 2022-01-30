@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WPFUtils.Controls
 {
+    // this is strongly inspired by 
+
+
     /// <summary>
     /// A combobox which allows multiple selection
     /// <remarks>
@@ -34,7 +25,7 @@ namespace WPFUtils.Controls
         public class MultiCbxBaseData
         {
             public int Id { get; set; }
-            public string ViewName { get; set; }
+            public string ViewName { get; set; } = "";
             public bool IsCheck { get; set; }
         }
 
@@ -50,9 +41,9 @@ namespace WPFUtils.Controls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            m_popupCtrl = Template.FindName("CB_Part_ListBox", this) as ListBox;
-            m_selectionCtrl = Template.FindName("CB_Part_ListBoxChk", this) as ListBox;
-            m_selectionCtrl.ItemsSource = ChekedItems;
+            m_popupCtrl = (ListBox)Template.FindName("CB_Part_ListBox", this);
+            m_selectionCtrl = (ListBox)Template.FindName("CB_Part_ListBoxChk", this);
+            m_selectionCtrl.ItemsSource = CheckedItems;
             m_popupCtrl.SelectionChanged += OnPopupCtrlSelectionChanged;
             m_selectionCtrl.SelectionChanged += OnSelectionCtrlSelectionChanged;
 
@@ -60,7 +51,7 @@ namespace WPFUtils.Controls
             {
                 foreach (var item in ItemsSource)
                 {
-                    MultiCbxBaseData bdc = item as MultiCbxBaseData;
+                    MultiCbxBaseData bdc = (MultiCbxBaseData)item;
                     if (bdc.IsCheck)
                     {
                         m_popupCtrl.SelectedItems.Add(bdc);
@@ -73,14 +64,14 @@ namespace WPFUtils.Controls
         {
             foreach (var item in e.RemovedItems)
             {
-                MultiCbxBaseData datachk = item as MultiCbxBaseData;
+                var datachk = (MultiCbxBaseData)item;
 
-                for (int i = 0; i < m_selectionCtrl.SelectedItems.Count; i++)
+                for (var i = 0; i < m_popupCtrl.SelectedItems.Count; i++)
                 {
-                    MultiCbxBaseData datachklist = m_selectionCtrl.SelectedItems[i] as MultiCbxBaseData;
+                    var datachklist = (MultiCbxBaseData)m_popupCtrl.SelectedItems[i];
                     if (datachklist.Id == datachk.Id)
                     {
-                        m_selectionCtrl.SelectedItems.Remove(m_selectionCtrl.SelectedItems[i]);
+                        m_popupCtrl.SelectedItems.Remove(m_popupCtrl.SelectedItems[i]);
                     }
                 }
             }
@@ -90,23 +81,37 @@ namespace WPFUtils.Controls
         {
             foreach (var item in e.AddedItems)
             {
-                MultiCbxBaseData datachk = item as MultiCbxBaseData;
+                // insert it such as the items are still sorted by Id
+                var datachk = (MultiCbxBaseData)item;
+                bool done = false;
                 datachk.IsCheck = true;
-                if (ChekedItems.IndexOf(datachk) < 0)
+                for (int idx = 0; idx < CheckedItems.Count; ++idx)
                 {
-                    ChekedItems.Add(datachk);
+                    if (CheckedItems[idx].Id == datachk.Id)
+                    {
+                        done = true;
+                        break;}
+                    if (CheckedItems[idx].Id > datachk.Id)
+                    {
+                        done = true;
+                        CheckedItems.Insert(idx, datachk);
+                        break;
+                    }
+                }
+                if (!done)
+                {
+                    CheckedItems.Add(datachk);
                 }
             }
-
             foreach (var item in e.RemovedItems)
             {
-                MultiCbxBaseData datachk = item as MultiCbxBaseData;
+                var datachk = (MultiCbxBaseData)item;
                 datachk.IsCheck = false;
-                ChekedItems.Remove(datachk);
+                CheckedItems.Remove(datachk);
             }
         }
 
-        public ObservableCollection<MultiCbxBaseData> ChekedItems = new();
+        public ObservableCollection<MultiCbxBaseData> CheckedItems = new();
         private ListBox m_selectionCtrl;
         private ListBox m_popupCtrl;
     }

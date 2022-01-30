@@ -18,9 +18,17 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
-            <Border  Background="White" Grid.ColumnSpan="2" Opacity="0"/>
+            <Border  Background="White" 
+                     Grid.ColumnSpan="2" 
+                     Opacity="0"/>
             <!-- draw the arrow -->
-            <Path x:Name="Arrow" Grid.Column="1"   Data="M 0 0  6 6 12 0 Z" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="None" Fill="#999" />
+            <Path x:Name="Arrow" 
+                  Grid.Column="1"   
+                  Data="M 0 0  6 6 12 0 Z" 
+                  VerticalAlignment="Center" 
+                  HorizontalAlignment="Center" 
+                  Stretch="None" 
+                  Fill="#999" />
         </Grid>
         <!-- on click rotate the arrow by 180o -->
         <ControlTemplate.Triggers>
@@ -46,17 +54,24 @@
             <Setter.Value>
                     <ControlTemplate TargetType="{x:Type controls:MultiSelectComboBox}">
                     <Grid>
-                        <Border x:Name="Bg" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"  Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" BorderBrush="#eaeaea" BorderThickness="1"  >
+                        <Border x:Name="Bg" 
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"  
+                                Width="{TemplateBinding Width}" 
+                                Height="{TemplateBinding Height}" 
+                                BorderBrush="#eaeaea" 
+                                BorderThickness="2"  >
                             <!-- the textbox and the drop-down button -->
                             <Grid x:Name="CB_Part_Root">
-
                                 <Grid x:Name="CB_Part_InnerGrid" Margin="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="0.3*" MaxWidth="30" />
                                     </Grid.ColumnDefinitions>
-                                    <!-- the texbox is replaced by and horizontal listbox -->
-                                    <ListBox x:Name="CB_Part_ListBoxChk"  SelectionMode="Multiple" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                    <!-- the texbox is replaced by an horizontal listbox -->
+                                    <ListBox x:Name="CB_Part_ListBoxChk"  
+                                             SelectionMode="Multiple" 
+                                             BorderThickness="0" 
+                                             ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                         <ListBox.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <VirtualizingStackPanel Orientation="Horizontal" VirtualizingStackPanel.IsVirtualizing="True" />
@@ -69,7 +84,12 @@
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="ListBoxItem">
-                                                            <CheckBox BorderThickness="0"  VerticalAlignment="Center" HorizontalAlignment="Center"  Content="{Binding ViewName}" IsChecked="{Binding Path=IsSelected,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                                            <CheckBox 
+                                                                BorderThickness="0"  
+                                                                VerticalAlignment="Center" 
+                                                                HorizontalAlignment="Center"  
+                                                                Content="{Binding ViewName}" 
+                                                                IsChecked="{Binding Path=IsSelected,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                                         </ControlTemplate>
                                                     </Setter.Value>
                                                 </Setter>
@@ -80,17 +100,27 @@
                                     <!--Drop-down button-->
                                     <ToggleButton x:Name="CB_Part_DropDownToggle" IsTabStop="False"  
                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                         Grid.Column="1" Template="{StaticResource ComboBoxToggleButton}" />
+                                         Grid.Column="1" 
+                                         Template="{StaticResource ComboBoxToggleButton}" />
                                 </Grid>
                             </Grid>
                         </Border>
-                        <!--A multi-select list pops up-->
-                        <Popup x:Name="CB_Part_Popup" AllowsTransparency="True"  Focusable="False" StaysOpen="False"
+                        <!--The multi-select list pop-up-->
+                        <Popup x:Name="CB_Part_Popup" 
+                               AllowsTransparency="True"  
+                               Focusable="False" 
+                               StaysOpen="False"
                                IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                               PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
-                            <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"  MaxHeight="{Binding MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent}}" >
-                                <ListBox x:Name="CB_Part_ListBox" SelectionMode="Multiple" BorderThickness="1 0 1 1" Background="White" ItemsSource="{Binding ItemsSource,RelativeSource={RelativeSource TemplatedParent}}"
-                                             MaxHeight="{TemplateBinding MaxDropDownHeight}" BorderBrush="#eaeaea"  >
+                               PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" 
+                               Placement="Bottom">
+                            <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"  
+                                  MaxHeight="{Binding MaxDropDownHeight, RelativeSource={RelativeSource TemplatedParent}}" >
+                                <ListBox x:Name="CB_Part_ListBox" 
+                                         SelectionMode="Multiple" 
+                                         BorderThickness="1 0 1 1" 
+                                         Background="White" ItemsSource="{Binding ItemsSource,RelativeSource={RelativeSource TemplatedParent}}"
+                                         MaxHeight="{TemplateBinding MaxDropDownHeight}" 
+                                         BorderBrush="#eaeaea"  >
                                     <ListBox.ItemContainerStyle>
                                         <Style  TargetType="ListBoxItem">
                                             <Setter Property="Template">
@@ -127,14 +157,22 @@
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
-                                                <CheckBox x:Name="chk" Visibility="Hidden"  IsChecked="{Binding IsCheck,Mode=TwoWay}" VerticalAlignment="Center"/>
-                                                <CheckBox VerticalAlignment="Center"  Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListBoxItem}}" IsChecked="{Binding  RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsSelected,Mode=TwoWay}"  Content="{Binding Path=ViewName}" />
+                                                <CheckBox x:Name="chk" 
+                                                          Visibility="Hidden"  
+                                                          IsChecked="{Binding IsCheck,Mode=TwoWay}" 
+                                                          VerticalAlignment="Center"/>
+                                                <CheckBox VerticalAlignment="Center"  
+                                                          Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListBoxItem}}" 
+                                                          IsChecked="{Binding  RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsSelected,Mode=TwoWay}"  
+                                                          Content="{Binding Path=ViewName}" />
                                             </Grid>
                                             <DataTemplate.Triggers>
-                                                <DataTrigger   Binding="{Binding  RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsSelected}" Value="true">
+                                                <DataTrigger   Binding="{Binding  RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsSelected}" 
+                                                               Value="true">
                                                     <Setter  TargetName="chk"  Property="IsChecked" Value="true"/>
                                                 </DataTrigger>
-                                                <DataTrigger   Binding="{Binding  RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsSelected}" Value="false">
+                                                <DataTrigger   Binding="{Binding  RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsSelected}" 
+                                                               Value="false">
                                                     <Setter     TargetName="chk" Property="IsChecked" Value="true"/>
                                                 </DataTrigger>
                                             </DataTemplate.Triggers>
