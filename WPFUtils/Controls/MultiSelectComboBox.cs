@@ -77,6 +77,12 @@ namespace WPFUtils.Controls
         private void OnPopupCtrlSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // update the item source
+            foreach (var item in e.RemovedItems)
+            {
+                var datachk = (ItemData)item;
+                datachk.IsCheck = false;
+                CheckedItems.Remove(datachk);
+            }
             foreach (var item in e.AddedItems)
             {
                 // insert it such as the items are still sorted by Id
@@ -101,12 +107,6 @@ namespace WPFUtils.Controls
                 {
                     CheckedItems.Add(datachk);
                 }
-            }
-            foreach (var item in e.RemovedItems)
-            {
-                var datachk = (ItemData)item;
-                datachk.IsCheck = false;
-                CheckedItems.Remove(datachk);
             }
         }
 
