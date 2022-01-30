@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -31,6 +33,7 @@ namespace WPFUtils.Controls
 
         static MultiSelectComboBox()
         {
+            // select the control template
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MultiSelectComboBox), new FrameworkPropertyMetadata(typeof(MultiSelectComboBox)));
         }
 
@@ -42,10 +45,15 @@ namespace WPFUtils.Controls
             m_selectionCtrl.ItemsSource = CheckedItems;
             m_popupCtrl.SelectionChanged += OnPopupCtrlSelectionChanged;
             m_selectionCtrl.SelectionChanged += OnSelectionCtrlSelectionChanged;
+            InitPopupListBox(ItemsSource);
 
-            if (ItemsSource != null)
+        }
+
+        private void InitPopupListBox(IEnumerable? items)
+        {
+            if (items != null && m_popupCtrl != null)
             {
-                foreach (var item in ItemsSource)
+                foreach (var item in items)
                 {
                     ItemData bdc = (ItemData)item;
                     if (bdc.IsCheck)
@@ -54,6 +62,14 @@ namespace WPFUtils.Controls
                     }
                 }
             }
+        }
+
+        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
+        {
+            // we use an array instead of an enumeration as we are doing multiple enumerations
+            var items = newValue as object[] ?? newValue.Cast<object>().ToArray();
+            InitPopupListBox(items);
+            base.OnItemsSourceChanged(oldValue, items);
         }
 
         private void OnSelectionCtrlSelectionChanged(object sender, SelectionChangedEventArgs e)
