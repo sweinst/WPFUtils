@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace WPFUtils.Controls
 {
-    // this is strongly inspired by 
+    // this is strongly inspired by https://www.programmerall.com/article/8486854271/
 
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace WPFUtils.Controls
     /// </summary>
     public class MultiSelectComboBox : ComboBox
     {
-        public class MultiCbxBaseData
+        public class ItemData
         {
             public int Id { get; set; }
             public string ViewName { get; set; } = "";
@@ -32,10 +32,6 @@ namespace WPFUtils.Controls
         static MultiSelectComboBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MultiSelectComboBox), new FrameworkPropertyMetadata(typeof(MultiSelectComboBox)));
-        }
-        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            d.SetValue(e.Property, e.NewValue);
         }
 
         public override void OnApplyTemplate()
@@ -51,7 +47,7 @@ namespace WPFUtils.Controls
             {
                 foreach (var item in ItemsSource)
                 {
-                    MultiCbxBaseData bdc = (MultiCbxBaseData)item;
+                    ItemData bdc = (ItemData)item;
                     if (bdc.IsCheck)
                     {
                         m_popupCtrl.SelectedItems.Add(bdc);
@@ -62,14 +58,15 @@ namespace WPFUtils.Controls
 
         private void OnSelectionCtrlSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // update the pop-up list
             foreach (var item in e.RemovedItems)
             {
-                var datachk = (MultiCbxBaseData)item;
+                var removedItem = (ItemData)item;
 
                 for (var i = 0; i < m_popupCtrl.SelectedItems.Count; i++)
                 {
-                    var datachklist = (MultiCbxBaseData)m_popupCtrl.SelectedItems[i];
-                    if (datachklist.Id == datachk.Id)
+                    var selectedItem = (ItemData)m_popupCtrl.SelectedItems[i];
+                    if (selectedItem.Id == removedItem.Id)
                     {
                         m_popupCtrl.SelectedItems.Remove(m_popupCtrl.SelectedItems[i]);
                     }
@@ -79,10 +76,11 @@ namespace WPFUtils.Controls
 
         private void OnPopupCtrlSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // update the item source
             foreach (var item in e.AddedItems)
             {
                 // insert it such as the items are still sorted by Id
-                var datachk = (MultiCbxBaseData)item;
+                var datachk = (ItemData)item;
                 bool done = false;
                 datachk.IsCheck = true;
                 for (int idx = 0; idx < CheckedItems.Count; ++idx)
@@ -90,7 +88,8 @@ namespace WPFUtils.Controls
                     if (CheckedItems[idx].Id == datachk.Id)
                     {
                         done = true;
-                        break;}
+                        break;
+                    }
                     if (CheckedItems[idx].Id > datachk.Id)
                     {
                         done = true;
@@ -105,14 +104,14 @@ namespace WPFUtils.Controls
             }
             foreach (var item in e.RemovedItems)
             {
-                var datachk = (MultiCbxBaseData)item;
+                var datachk = (ItemData)item;
                 datachk.IsCheck = false;
                 CheckedItems.Remove(datachk);
             }
         }
 
-        public ObservableCollection<MultiCbxBaseData> CheckedItems = new();
-        private ListBox m_selectionCtrl;
-        private ListBox m_popupCtrl;
+        public ObservableCollection<ItemData> CheckedItems = new();
+        private ListBox? m_selectionCtrl;
+        private ListBox? m_popupCtrl;
     }
 }

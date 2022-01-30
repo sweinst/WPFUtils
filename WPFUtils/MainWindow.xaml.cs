@@ -12,29 +12,29 @@ namespace WPFUtils
         public MainWindow()
         {
             InitializeComponent();
-            MultiComboBoxListData = new ObservableCollection<MultiSelectComboBox.MultiCbxBaseData>()
+            MultiComboBoxListData = new ObservableCollection<MultiSelectComboBox.ItemData>()
             {
-                new MultiSelectComboBox.MultiCbxBaseData(){
+                new MultiSelectComboBox.ItemData(){
                     Id=0,
                     ViewName="Tom",
                     IsCheck=false
                 },
-                new MultiSelectComboBox.MultiCbxBaseData(){
+                new MultiSelectComboBox.ItemData(){
                     Id=1,
                     ViewName="John Doe",
                     IsCheck=false
                 },
-                new MultiSelectComboBox.MultiCbxBaseData(){
+                new MultiSelectComboBox.ItemData(){
                     Id=2,
                     ViewName="Harry",
                     IsCheck=false
                 },
-                new MultiSelectComboBox.MultiCbxBaseData(){
+                new MultiSelectComboBox.ItemData(){
                     Id=3,
                     ViewName="Ma Six",
                     IsCheck=false
                 },
-                new MultiSelectComboBox.MultiCbxBaseData(){
+                new MultiSelectComboBox.ItemData(){
                     Id=4,
                     ViewName="Zhao Qi",
                     IsCheck=true
@@ -44,6 +44,6 @@ namespace WPFUtils
             TestMSCB.ItemsSource = MultiComboBoxListData;
         }
 
-        private ObservableCollection<MultiSelectComboBox.MultiCbxBaseData> MultiComboBoxListData;
+        private ObservableCollection<MultiSelectComboBox.ItemData> MultiComboBoxListData;
     }
 }
