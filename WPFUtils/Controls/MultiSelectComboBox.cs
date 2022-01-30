@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -42,7 +43,7 @@ namespace WPFUtils.Controls
             base.OnApplyTemplate();
             m_popupCtrl = (ListBox)Template.FindName("CB_Part_ListBox", this);
             m_selectionCtrl = (ListBox)Template.FindName("CB_Part_ListBoxChk", this);
-            m_selectionCtrl.ItemsSource = CheckedItems;
+            m_selectionCtrl.ItemsSource = m_checkedItems;
             m_popupCtrl.SelectionChanged += OnPopupCtrlSelectionChanged;
             m_selectionCtrl.SelectionChanged += OnSelectionCtrlSelectionChanged;
             InitPopupListBox(ItemsSource);
@@ -93,11 +94,13 @@ namespace WPFUtils.Controls
         private void OnPopupCtrlSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // update the item source
+            int nChanges = 0;
             foreach (var item in e.RemovedItems)
             {
                 var datachk = (ItemData)item;
                 datachk.IsCheck = false;
-                CheckedItems.Remove(datachk);
+                nChanges++;
+                m_checkedItems.Remove(datachk);
             }
             foreach (var item in e.AddedItems)
             {
@@ -105,28 +108,45 @@ namespace WPFUtils.Controls
                 var datachk = (ItemData)item;
                 bool done = false;
                 datachk.IsCheck = true;
-                for (int idx = 0; idx < CheckedItems.Count; ++idx)
+                for (int idx = 0; idx < m_checkedItems.Count; ++idx)
                 {
-                    if (CheckedItems[idx].Id == datachk.Id)
+                    if (m_checkedItems[idx].Id == datachk.Id)
                     {
                         done = true;
                         break;
                     }
-                    if (CheckedItems[idx].Id > datachk.Id)
+                    if (m_checkedItems[idx].Id > datachk.Id)
                     {
                         done = true;
-                        CheckedItems.Insert(idx, datachk);
+                        nChanges++;
+                        m_checkedItems.Insert(idx, datachk);
                         break;
                     }
                 }
                 if (!done)
                 {
-                    CheckedItems.Add(datachk);
+                    nChanges++;
+                    m_checkedItems.Add(datachk);
                 }
+            }
+
+            if (nChanges != 0)
+            {
+                CheckedItems = m_checkedItems;
             }
         }
 
-        public ObservableCollection<ItemData> CheckedItems = new();
+        /// <summary>
+        /// A dependent property which allows the data source to be notified of changes
+        /// </summary>
+        public IList<ItemData> CheckedItems
+        {
+            get => (IList<ItemData>) GetValue(s_checkeIemdProperty);
+            set => SetValue(s_checkeIemdProperty, value);
+        }
+
+        private static readonly DependencyProperty s_checkeIemdProperty = DependencyProperty.Register("CheckedItems", typeof(IList<ItemData>), typeof(MultiSelectComboBox));
+        public readonly ObservableCollection<ItemData> m_checkedItems = new();
         private ListBox? m_selectionCtrl;
         private ListBox? m_popupCtrl;
     }

@@ -16,7 +16,7 @@
         <Grid Height="25" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="18"/>
             </Grid.ColumnDefinitions>
             <Border  Background="White" 
                      Grid.ColumnSpan="2" 
@@ -24,18 +24,21 @@
             <!-- draw the arrow -->
             <Path x:Name="Arrow" 
                   Grid.Column="1"   
-                  Data="M 0 0  6 6 12 0 Z" 
+                  Data="M 0 0 3 3 6 0" 
                   VerticalAlignment="Center" 
                   HorizontalAlignment="Center" 
                   Stretch="None" 
-                  Fill="#999" />
+                  Fill="Transparent" 
+                  Stroke="Black"
+                  StrokeThickness="1"
+                  />
         </Grid>
         <!-- on click rotate the arrow by 180o -->
         <ControlTemplate.Triggers>
             <Trigger Property="IsChecked" Value="true">
                 <Setter TargetName="Arrow" Property="RenderTransform">
                     <Setter.Value>
-                        <RotateTransform   CenterX="6" CenterY="3" Angle="180"></RotateTransform>
+                        <RotateTransform   CenterX="3" CenterY="2" Angle="180"></RotateTransform>
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="Arrow" Property="Margin" Value="0 0 0 2"/>
